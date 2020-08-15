@@ -4,12 +4,12 @@
  * This is the first thing users see of our App, at the '/' route
  */
 
-import React, { useEffect, memo } from 'react';
+import React, { useEffect, memo, useRef, useState, useContext } from 'react';
 import PropTypes from 'prop-types';
 import { Helmet } from 'react-helmet';
-import { FormattedMessage } from 'react-intl';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
+import styled from 'styled-components';
 import { createStructuredSelector } from 'reselect';
 
 import { useInjectReducer } from 'utils/injectReducer';
@@ -19,95 +19,91 @@ import {
   makeSelectLoading,
   makeSelectError,
 } from 'containers/App/selectors';
-import H2 from 'components/H2';
-import ReposList from 'components/ReposList';
-import AtPrefix from './AtPrefix';
-import CenteredSection from './CenteredSection';
-import Form from './Form';
-import Input from './Input';
-import Section from './Section';
-import messages from './messages';
+import GoogleMap from 'components/GoogleMap/Loadable';
 import { loadRepos } from '../App/actions';
 import { changeUsername } from './actions';
 import { makeSelectUsername } from './selectors';
 import reducer from './reducer';
 import saga from './saga';
+import { MenuContext } from 'contexts/MenuContext';
+import { PAGE_URL } from 'configs/constants';
+import { Link } from 'react-router-dom';
 
 const key = 'home';
+const screenHeight = window.innerHeight;
+const MapArea = styled.div`
+  min-height: 400px;
+  display: flex;
+  flex-direction: column;
+`;
+const Btn = styled.button`
+  z-index: 999;
+  bottom: 30px;
+  position: absolute;
+  height: 36px;
+  border: none;
+  background: red;
+  color: #fff;
+  width: 150px;
+  border-radius: 18px;
+`;
 
-export function HomePage({
-  username,
-  loading,
-  error,
-  repos,
-  onSubmitForm,
-  onChangeUsername,
-}) {
+const PostAdDiv = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  position: relative;
+  a {
+    z-index: 999;
+    bottom: 30px;
+    position: absolute;
+    height: 36px;
+    border: none;
+    background: red;
+    color: #fff;
+    width: 150px;
+    border-radius: 18px;
+    text-align: center;
+    line-height: 36px;
+  }
+`;
+
+export function HomePage({ username, onSubmitForm }) {
+  const mapRef = useRef(true);
+  const [isHome, setIsHome] = useContext(MenuContext);
+  console.log(setIsHome)
   useInjectReducer({ key, reducer });
   useInjectSaga({ key, saga });
-
   useEffect(() => {
-    // When initial state username is not null, submit the form to load repos
-    if (username && username.trim().length > 0) onSubmitForm();
-  }, []);
-
-  const reposListProps = {
-    loading,
-    error,
-    repos,
-  };
+    setIsHome(true);
+  }, [setIsHome])
+  useEffect(() => {
+    if (username && username.trim().length > 0){ onSubmitForm();}
+    if (mapRef.current) {
+      const { offsetTop } = mapRef.current;
+      mapRef.current.style.height = `${screenHeight - offsetTop}px`;
+    }
+  });
 
   return (
     <article>
       <Helmet>
         <title>Home Page</title>
-        <meta
-          name="description"
-          content="A React.js Boilerplate application homepage"
-        />
+        <meta name="description" content="Map Page" />
       </Helmet>
-      <div>
-        <CenteredSection>
-          <H2>
-            <FormattedMessage {...messages.startProjectHeader} />
-          </H2>
-          <p>
-            <FormattedMessage {...messages.startProjectMessage} />
-          </p>
-        </CenteredSection>
-        <Section>
-          <H2>
-            <FormattedMessage {...messages.trymeHeader} />
-          </H2>
-          <Form onSubmit={onSubmitForm}>
-            <label htmlFor="username">
-              <FormattedMessage {...messages.trymeMessage} />
-              <AtPrefix>
-                <FormattedMessage {...messages.trymeAtPrefix} />
-              </AtPrefix>
-              <Input
-                id="username"
-                type="text"
-                placeholder="mxstbr"
-                value={username}
-                onChange={onChangeUsername}
-              />
-            </label>
-          </Form>
-          <ReposList {...reposListProps} />
-        </Section>
-      </div>
+      <MapArea ref={mapRef}>
+        <GoogleMap />
+        <PostAdDiv>
+          <Link to={PAGE_URL.ADD_ADDRESS}>POST YOUR AD</Link>
+        </PostAdDiv>
+      </MapArea>
     </article>
   );
 }
 
 HomePage.propTypes = {
-  loading: PropTypes.bool,
-  error: PropTypes.oneOfType([PropTypes.object, PropTypes.bool]),
-  repos: PropTypes.oneOfType([PropTypes.array, PropTypes.bool]),
   onSubmitForm: PropTypes.func,
   username: PropTypes.string,
-  onChangeUsername: PropTypes.func,
 };
 
 const mapStateToProps = createStructuredSelector({
