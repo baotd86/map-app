@@ -5,6 +5,7 @@ import {
   withGoogleMap,
   GoogleMap,
   Marker,
+  withScriptjs,
 } from 'react-google-maps';
 
 const MyMapComponent = compose(
@@ -41,6 +42,7 @@ const MyMapComponent = compose(
         },
         onPlacesChanged: () => {
           const places = refs.searchBox.getPlaces();
+          // eslint-disable-next-line no-undef
           const bounds = new google.maps.LatLngBounds();
 
           places.forEach(place => {
@@ -56,6 +58,7 @@ const MyMapComponent = compose(
           const nextCenter = _.get(
             nextMarkers,
             '0.position',
+            // eslint-disable-next-line react/no-access-state-in-setstate
             this.state.center,
           );
 
@@ -68,6 +71,7 @@ const MyMapComponent = compose(
     },
   }),
   withGoogleMap,
+  withScriptjs,
 )(props => (
   <GoogleMap
     ref={props.onMapMounted}
@@ -82,6 +86,7 @@ const MyMapComponent = compose(
     <SearchBox
       ref={props.onSearchBoxMounted}
       bounds={props.bounds}
+      /* eslint-disable-next-line no-undef */
       controlPosition={google.maps.ControlPosition.TOP_CENTER}
       onPlacesChanged={props.onPlacesChanged}
     >
