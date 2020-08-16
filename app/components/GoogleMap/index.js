@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { compose, withProps, lifecycle } from 'recompose';
-import { SearchBox } from 'react-google-maps/lib/components/places/SearchBox';
 import { withGoogleMap, GoogleMap, Marker } from 'react-google-maps';
+import { SearchBox } from 'react-google-maps/lib/components/places/SearchBox';
 
 const MyMapComponent = compose(
   withProps({
@@ -11,6 +11,7 @@ const MyMapComponent = compose(
     containerElement: <div style={{ height: `100%` }} />,
     mapElement: <div style={{ height: `100%` }} />,
   }),
+  withGoogleMap,
   lifecycle({
     componentWillMount() {
       const refs = {};
@@ -65,7 +66,6 @@ const MyMapComponent = compose(
       });
     },
   }),
-  withGoogleMap,
 )(props => (
   <GoogleMap
     ref={props.onMapMounted}
