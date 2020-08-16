@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import styled from 'styled-components';
+import { isEmpty } from 'lodash';
 import GooglePlacesAutocomplete, {
   geocodeByPlaceId,
   getLatLng,
@@ -42,12 +43,15 @@ const PropLabel = styled.label`
   opacity: 0.75;
 `;
 const TxtArea = styled.textarea`
-  border: none;
+  border-top: none;
+  border-left: none;
+  border-right: none;
+  border-bottom: 1px solid #9e9e9e;
   border-radius: 0;
   resize: none;
   font-size: 16px;
-  height: 20px;
   margin-top: 10px;
+  margin-bottom: 8px;
   background-color: transparent;
   padding: 0;
   -webkit-box-shadow: none;
@@ -62,7 +66,7 @@ const TxtArea = styled.textarea`
 `;
 
 const Btn = styled.button`
-  z-index: 999;
+  position: relative;
   height: 36px;
   border: none;
   background: red;
@@ -73,14 +77,13 @@ const Btn = styled.button`
 const addressArr = JSON.parse(localStorage.getItem('addresses')) || [];
 let newAddress = {};
 function PostAddress() {
-
+  const googlePlacesAutocompleteRef = useRef();
   const handleClick = () => {
-    if (newAddress) {
+    if (!isEmpty(newAddress)) {
       addressArr.push(newAddress);
       localStorage.setItem('addresses', JSON.stringify(addressArr));
-      // eslint-disable-next-line prettier/prettier
-      const searchInput = document.getElementById('react-google-places-autocomplete-input');
-      searchInput.value = '';
+      googlePlacesAutocompleteRef.current.clearValue();
+      newAddress = {};
     }
   };
 
@@ -108,6 +111,7 @@ function PostAddress() {
                 .catch(error => console.error(error));
             }}
             placeholder="Canada Street 5555"
+            ref={googlePlacesAutocompleteRef}
           />
         </AdInput>
         <AdInput>
@@ -124,7 +128,7 @@ function PostAddress() {
           <PropLabel className="prop-label" htmlFor="prop_note">
             Describe more about you property
           </PropLabel>
-          <TxtArea id="prop_note" placeholder="Enter any note here" />
+          <TxtArea row="4" id="prop_note" placeholder="Enter any note here" />
         </AdInput>
         <AdInput>
           <div className="post-btn">

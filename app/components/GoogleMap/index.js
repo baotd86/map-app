@@ -2,8 +2,7 @@ import React from 'react';
 import { compose, withProps, lifecycle } from 'recompose';
 import { withGoogleMap, GoogleMap, Marker } from 'react-google-maps';
 import SearchBox from 'react-google-maps/lib/components/places/SearchBox';
-// eslint-disable-next-line react-hooks/rules-of-hooks
-const addresses = localStorage.getItem('addresses');
+
 const MapComponent = compose(
   withProps({
     googleMapURL:
@@ -15,7 +14,8 @@ const MapComponent = compose(
   lifecycle({
     componentWillMount() {
       const refs = {};
-
+      const addresses = localStorage.getItem('addresses');
+      console.log(addresses);
       this.setState({
         bounds: null,
         center: {
