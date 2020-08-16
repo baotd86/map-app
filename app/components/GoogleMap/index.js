@@ -77,6 +77,7 @@ const MapComponent = compose(
       fullscreenControl: false,
       mapTypeControl: false,
     }}
+    defaultOption={{ draggable: true }}
   >
     <SearchBox
       ref={props.onSearchBoxMounted}
