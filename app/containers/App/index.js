@@ -33,9 +33,15 @@ export default function App() {
   }, [setIsHome]);
 
   useEffect(() => {
-    const s = document.createElement('script');
-    s.type = 'text/javascript';
-    s.src = `https://maps.googleapis.com/maps/api/js?key=AIzaSyAtsz3a4isKyLsYrDF3olyVEsZ3wUGOHj4&v=3.exp&libraries=geometry,drawing,places`;
+    const script = document.createElement('script');
+    script.src =
+      'https://maps.googleapis.com/maps/api/js?key=AIzaSyAtsz3a4isKyLsYrDF3olyVEsZ3wUGOHj4&callback=initMap&libraries=geometry,drawing,places';
+    script.defer = true;
+
+    // Attach your callback function to the `window` object
+    window.initMap = () => {
+      // JS API is loaded and available
+    };
   });
 
   return (
