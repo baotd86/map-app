@@ -87,7 +87,7 @@ const MyMapComponent = compose(
       ref={props.onSearchBoxMounted}
       bounds={props.bounds}
       /* eslint-disable-next-line no-undef */
-      controlPosition={google.maps.ControlPosition.TOP_CENTER}
+      controlPosition={ google.maps.ControlPosition.TOP_CENTER}
       onPlacesChanged={props.onPlacesChanged}
     >
       <div style={{ textAlign: `center`, width: `100%`, left: 0 }}>

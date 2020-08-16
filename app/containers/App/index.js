@@ -31,18 +31,7 @@ export default function App() {
   useEffect(() => {
     setIsHome(true);
   }, [setIsHome]);
-
-  useEffect(() => {
-    const script = document.createElement('script');
-    script.src =
-      'https://maps.googleapis.com/maps/api/js?key=AIzaSyAtsz3a4isKyLsYrDF3olyVEsZ3wUGOHj4&callback=initMap&libraries=geometry,drawing,places';
-    script.defer = true;
-
-    // Attach your callback function to the `window` object
-    window.initMap = () => {
-      // JS API is loaded and available
-    };
-  });
+  
 
   return (
     <MenuContext.Provider value={[isHome, setIsHome]}>
