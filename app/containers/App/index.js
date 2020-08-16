@@ -30,7 +30,14 @@ export default function App() {
   const [isHome, setIsHome] = useState(true);
   useEffect(() => {
     setIsHome(true);
-  }, [setIsHome])
+  }, [setIsHome]);
+
+  useEffect(() => {
+    const s = document.createElement('script');
+    s.type = 'text/javascript';
+    s.src = `https://maps.googleapis.com/maps/api/js?key=AIzaSyAtsz3a4isKyLsYrDF3olyVEsZ3wUGOHj4&v=3.exp&libraries=geometry,drawing,places`;
+  });
+
   return (
     <MenuContext.Provider value={[isHome, setIsHome]}>
       <AppWrapper>
