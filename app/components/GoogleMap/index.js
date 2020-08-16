@@ -19,7 +19,7 @@ const MapComponent = compose(
       let center = { lat: 41.9, lng: -87.624 };
       if (!_.isEmpty(addresses) && !_.isEmpty(addresses[0])) {
         // eslint-disable-next-line prefer-destructuring
-        center = addresses[0].position;
+        center = addresses[addresses.length - 1].position;
         console.log(center, addresses[0]);
       }
       this.setState({
