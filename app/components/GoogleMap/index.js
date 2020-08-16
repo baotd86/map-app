@@ -2,6 +2,7 @@ import React from 'react';
 import { compose, withProps, lifecycle } from 'recompose';
 import { withGoogleMap, GoogleMap, Marker } from 'react-google-maps';
 import SearchBox from 'react-google-maps/lib/components/places/SearchBox';
+import { isEmpty } from 'lodash';
 
 const MapComponent = compose(
   withProps({
@@ -14,14 +15,15 @@ const MapComponent = compose(
   lifecycle({
     componentWillMount() {
       const refs = {};
-      const addresses = localStorage.getItem('addresses');
-      console.log(addresses);
+      const addresses = JSON.parse(localStorage.getItem('addresses')) || [];
+      let center = { lat: 41.9, lng: -87.624 };
+      if (!isEmpty(addresses) && !isEmpty(addresses[0])) {
+        // eslint-disable-next-line prefer-destructuring
+        center = addresses[0];
+      }
       this.setState({
         bounds: null,
-        center: {
-          lat: 41.9,
-          lng: -87.624,
-        },
+        center,
         markers: JSON.parse(addresses) || [],
         onMapMounted: ref => {
           refs.map = ref;
