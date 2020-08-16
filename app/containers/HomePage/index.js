@@ -20,14 +20,14 @@ import {
   makeSelectError,
 } from 'containers/App/selectors';
 import GoogleMap from 'components/GoogleMap/Loadable';
+import { MenuContext } from 'contexts/MenuContext';
+import { PAGE_URL } from 'configs/constants';
+import { Link } from 'react-router-dom';
 import { loadRepos } from '../App/actions';
 import { changeUsername } from './actions';
 import { makeSelectUsername } from './selectors';
 import reducer from './reducer';
 import saga from './saga';
-import { MenuContext } from 'contexts/MenuContext';
-import { PAGE_URL } from 'configs/constants';
-import { Link } from 'react-router-dom';
 
 const key = 'home';
 const screenHeight = window.innerHeight;
@@ -71,14 +71,16 @@ const PostAdDiv = styled.div`
 export function HomePage({ username, onSubmitForm }) {
   const mapRef = useRef(true);
   const [isHome, setIsHome] = useContext(MenuContext);
-  console.log(setIsHome)
+  console.log(setIsHome);
   useInjectReducer({ key, reducer });
   useInjectSaga({ key, saga });
   useEffect(() => {
     setIsHome(true);
-  }, [setIsHome])
+  }, [setIsHome]);
   useEffect(() => {
-    if (username && username.trim().length > 0){ onSubmitForm();}
+    if (username && username.trim().length > 0) {
+      onSubmitForm();
+    }
     if (mapRef.current) {
       const { offsetTop } = mapRef.current;
       mapRef.current.style.height = `${screenHeight - offsetTop}px`;

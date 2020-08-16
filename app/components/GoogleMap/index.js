@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { compose, withProps, lifecycle } from 'recompose';
 import { withGoogleMap, GoogleMap, Marker } from 'react-google-maps';
-import { SearchBox } from 'react-google-maps/lib/components/places/SearchBox';
-
-const MyMapComponent = compose(
+import SearchBox from 'react-google-maps/lib/components/places/SearchBox';
+// eslint-disable-next-line react-hooks/rules-of-hooks
+const addresses = localStorage.getItem('addresses');
+const MapComponent = compose(
   withProps({
     googleMapURL:
       'https://maps.googleapis.com/maps/api/js?key=AIzaSyAtsz3a4isKyLsYrDF3olyVEsZ3wUGOHj4&v=3.exp&libraries=geometry,drawing,places',
@@ -11,19 +12,17 @@ const MyMapComponent = compose(
     containerElement: <div style={{ height: `100%` }} />,
     mapElement: <div style={{ height: `100%` }} />,
   }),
-  withGoogleMap,
   lifecycle({
     componentWillMount() {
       const refs = {};
-      // eslint-disable-next-line react-hooks/rules-of-hooks
-      const addresses = localStorage.getItem('addresses');
+
       this.setState({
         bounds: null,
         center: {
           lat: 41.9,
           lng: -87.624,
         },
-        markers: JSON.parse(addresses),
+        markers: JSON.parse(addresses) || [],
         onMapMounted: ref => {
           refs.map = ref;
         },
@@ -62,10 +61,12 @@ const MyMapComponent = compose(
             center: nextCenter,
             markers: nextMarkers,
           });
+          // refs.map.fitBounds(bounds);
         },
       });
     },
   }),
+  withGoogleMap,
 )(props => (
   <GoogleMap
     ref={props.onMapMounted}
@@ -80,8 +81,8 @@ const MyMapComponent = compose(
     <SearchBox
       ref={props.onSearchBoxMounted}
       bounds={props.bounds}
-      /* eslint-disable-next-line no-undef */
-      controlPosition={ google.maps.ControlPosition.TOP_CENTER}
+      // eslint-disable-next-line no-undef
+      controlPosition={google.maps.ControlPosition.TOP_LEFT}
       onPlacesChanged={props.onPlacesChanged}
     >
       <div style={{ textAlign: `center`, width: `100%`, left: 0 }}>
@@ -107,13 +108,18 @@ const MyMapComponent = compose(
     </SearchBox>
     {props.markers.map((marker, index) => (
       // eslint-disable-next-line react/no-array-index-key
-      <Marker key={index} position={marker.position} title={marker.title} clickable />
+      <Marker
+        key={index}
+        position={marker.position}
+        title={marker.title}
+        clickable
+      />
     ))}
   </GoogleMap>
 ));
 
 function MyGoogleMap() {
-  return <MyMapComponent isMarkerShown />;
+  return <MapComponent isMarkerShown />;
 }
 
 export default MyGoogleMap;
