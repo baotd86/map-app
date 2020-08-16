@@ -29,11 +29,17 @@ const AdInput = styled.div`
     margin-top: 10px;
     text-align: center;
   }
+
+  .post-btn {
+    text-align: center;
+  }
 `;
 const PropInput = styled.input``;
 const PropLabel = styled.label`
   font-size: 14px;
   color: #000;
+  font-weight: bold;
+  opacity: 0.75;
 `;
 const TxtArea = styled.textarea`
   border: none;
@@ -57,8 +63,6 @@ const TxtArea = styled.textarea`
 
 const Btn = styled.button`
   z-index: 999;
-  bottom: 30px;
-  position: absolute;
   height: 36px;
   border: none;
   background: red;
@@ -74,9 +78,8 @@ function PostAddress() {
     if (newAddress) {
       addressArr.push(newAddress);
       localStorage.setItem('addresses', JSON.stringify(addressArr));
-      const searchInput = document.getElementById(
-        'react-google-places-autocomplete-input',
-      );
+      // eslint-disable-next-line prettier/prettier
+      const searchInput = document.getElementById('react-google-places-autocomplete-input');
       searchInput.value = '';
     }
   };
@@ -124,7 +127,9 @@ function PostAddress() {
           <TxtArea id="prop_note" placeholder="Enter any note here" />
         </AdInput>
         <AdInput>
-          <Btn onClick={handleClick}>POST ADDRESS</Btn>
+          <div className="post-btn">
+            <Btn onClick={handleClick}>POST ADDRESS</Btn>
+          </div>
         </AdInput>
       </div>
     </PostAdArea>
