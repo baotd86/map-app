@@ -19,12 +19,13 @@ const MapComponent = compose(
       let center = { lat: 41.9, lng: -87.624 };
       if (!isEmpty(addresses) && !isEmpty(addresses[0])) {
         // eslint-disable-next-line prefer-destructuring
-        center = addresses[0];
+        center = addresses[0].position;
+        console.log(center, addresses[0]);
       }
       this.setState({
         bounds: null,
         center,
-        markers: JSON.parse(addresses) || [],
+        markers: addresses,
         onMapMounted: ref => {
           refs.map = ref;
         },
