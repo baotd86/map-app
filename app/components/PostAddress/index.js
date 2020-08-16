@@ -16,7 +16,20 @@ const PostAdArea = styled.div`
     line-height: 25px;
   }
 `;
-const AdInput = styled.div``;
+const AdInput = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  i {
+    color: #ee6e73;
+    font-size: 56px;
+    text-align: center;
+  }
+  p {
+    margin-top: 10px;
+    text-align: center;
+  }
+`;
 const PropInput = styled.input``;
 const PropLabel = styled.label`
   font-size: 14px;
@@ -27,7 +40,7 @@ const TxtArea = styled.textarea`
   border-radius: 0;
   resize: none;
   font-size: 16px;
-  height: 50px;
+  height: 20px;
   margin-top: 10px;
   background-color: transparent;
   padding: 0;
@@ -42,10 +55,39 @@ const TxtArea = styled.textarea`
   outline: none;
 `;
 
+const Btn = styled.button`
+  z-index: 999;
+  bottom: 30px;
+  position: absolute;
+  height: 36px;
+  border: none;
+  background: red;
+  color: #fff;
+  width: 150px;
+  border-radius: 18px;
+`;
+const addressArr = JSON.parse(localStorage.getItem('addresses')) || [];
+let newAddress = {};
 function PostAddress() {
+
+  const handleClick = () => {
+    if (newAddress) {
+      addressArr.push(newAddress);
+      localStorage.setItem('addresses', JSON.stringify(addressArr));
+      const searchInput = document.getElementById(
+        'react-google-places-autocomplete-input',
+      );
+      searchInput.value = '';
+    }
+  };
+
   return (
     <PostAdArea>
       <div>
+        <AdInput>
+          <i className="material-icons">insert_photo</i>
+          <p>Add a Photo</p>
+        </AdInput>
         <AdInput>
           <PropLabel className="prop-label" htmlFor="address_input">
             Property Address
@@ -58,10 +100,7 @@ function PostAddress() {
               geocodeByPlaceId(place_id)
                 .then(results => getLatLng(results[0]))
                 .then(({ lat, lng }) => {
-                  const address = JSON.parse(localStorage.getItem('addresses'));
-                  const newAd = { position: { lat, lng }, title: '' };
-                  address.push(newAd);
-                  localStorage.setItem('addresses', JSON.stringify(address));
+                  newAddress = { position: { lat, lng }, title: '' };
                 })
                 .catch(error => console.error(error));
             }}
@@ -83,6 +122,9 @@ function PostAddress() {
             Describe more about you property
           </PropLabel>
           <TxtArea id="prop_note" placeholder="Enter any note here" />
+        </AdInput>
+        <AdInput>
+          <Btn onClick={handleClick}>POST ADDRESS</Btn>
         </AdInput>
       </div>
     </PostAdArea>
