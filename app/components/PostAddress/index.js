@@ -1,9 +1,9 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import styled from 'styled-components';
-import GooglePlacesAutocomplete, {
-  geocodeByPlaceId,
-  getLatLng,
-} from 'react-google-places-autocomplete';
+// import GooglePlacesAutocomplete, {
+//   geocodeByPlaceId,
+//   getLatLng,
+// } from 'react-google-places-autocomplete';
 import 'react-google-places-autocomplete/dist/index.min.css';
 
 const PostAdArea = styled.div`
@@ -50,23 +50,7 @@ function PostAddress() {
           <PropLabel className="prop-label" htmlFor="address_input">
             Property Address
           </PropLabel>
-          <GooglePlacesAutocomplete
-            id="address_input"
-            inputClassName="autocomplete"
-            /* eslint-disable-next-line camelcase */
-            onSelect={({ place_id }) => {
-              geocodeByPlaceId(place_id)
-                .then(results => getLatLng(results[0]))
-                .then(({ lat, lng }) => {
-                  const address = JSON.parse(localStorage.getItem('addresses'));
-                  const newAd = { position: { lat, lng }, title: '' };
-                  address.push(newAd);
-                  localStorage.setItem('addresses', JSON.stringify(address));
-                })
-                .catch(error => console.error(error));
-            }}
-            placeholder="Canada Street 5555"
-          />
+
         </AdInput>
         <AdInput>
           <PropLabel className="prop-label" htmlFor="prop_title">

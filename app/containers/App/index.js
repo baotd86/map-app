@@ -31,7 +31,6 @@ export default function App() {
   useEffect(() => {
     setIsHome(true);
   }, [setIsHome]);
-  
 
   return (
     <MenuContext.Provider value={[isHome, setIsHome]}>
