@@ -6,7 +6,7 @@
  * contain code that should be seen on all pages. (e.g. navigation bar)
  */
 
-import React, { useEffect, useState } from 'react';
+import React, { createRef, memo, useEffect, useRef, useState } from 'react';
 import { Helmet } from 'react-helmet';
 import styled from 'styled-components';
 import { Switch, Route } from 'react-router-dom';
@@ -17,6 +17,8 @@ import AddressPage from 'containers/PostAddressPage/Loadable';
 import NotFoundPage from 'containers/NotFoundPage/Loadable';
 import { MenuContext } from 'contexts/MenuContext';
 
+import { connect } from 'react-redux';
+import { compose } from 'redux';
 import GlobalStyle from '../../global-styles';
 
 const AppWrapper = styled.div`
@@ -26,11 +28,24 @@ const AppWrapper = styled.div`
   flex-direction: column;
 `;
 
-export default function App() {
+const screenHeight = window.innerHeight;
+
+export function App() {
   const [isHome, setIsHome] = useState(true);
+  const [mapHeight, setMapHeight] = useState(`450px`);
+  const hRef = React.createRef();
+
   useEffect(() => {
     setIsHome(true);
   }, [setIsHome]);
+
+  useEffect(() => {
+    if (hRef.current) {
+      const headerH = hRef.current.clientHeight;
+      setMapHeight(`${screenHeight - headerH}px`);
+      console.log(mapHeight);
+    }
+  });
 
   return (
     <MenuContext.Provider value={[isHome, setIsHome]}>
@@ -44,9 +59,9 @@ export default function App() {
             content="A React.js Boilerplate application"
           />
         </Helmet>
-        <Header />
+        <Header ref={hRef} />
         <Switch>
-          <Route exact path="/" component={HomePage} />
+          <Route exact path="/" component={HomePage} mapHeight={mapHeight} />
           <Route path="/post-address" component={AddressPage} />
           <Route path="" component={NotFoundPage} />
         </Switch>
@@ -55,3 +70,15 @@ export default function App() {
     </MenuContext.Provider>
   );
 }
+
+const mapStateToProps = state => ({
+  mapHeight: state.mapHeight,
+  isHome: state.isHome,
+});
+
+const withConnect = connect(mapStateToProps);
+
+export default compose(
+  withConnect,
+  memo,
+)(App);

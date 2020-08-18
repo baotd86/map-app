@@ -7,7 +7,7 @@ import * as _ from 'lodash';
 const MapComponent = compose(
   withProps({
     googleMapURL:
-      'https://maps.googleapis.com/maps/api/js?key=AIzaSyAtsz3a4isKyLsYrDF3olyVEsZ3wUGOHj4&v=3.exp&libraries=geometry,drawing,places',
+      'https://maps.googleapis.com/maps/api/js?key=AIzaSyAtsz3a4isKyLsYrDF3olyVEsZ3wUGOHj4&v=3&libraries=geometry,drawing,places',
     loadingElement: <div style={{ height: `100%` }} />,
     containerElement: <div style={{ height: `100%` }} />,
     mapElement: <div style={{ height: `100%` }} />,
@@ -79,6 +79,7 @@ const MapComponent = compose(
     options={{
       fullscreenControl: false,
       mapTypeControl: false,
+      draggable: true,
     }}
     defaultOption={{ draggable: true }}
   >

@@ -4,7 +4,7 @@
  * This is the first thing users see of our App, at the '/' route
  */
 
-import React, { useEffect, memo, useRef, useState, useContext } from 'react';
+import React, { useEffect, memo, useRef, useState, useContext, createRef } from 'react';
 import PropTypes from 'prop-types';
 import { Helmet } from 'react-helmet';
 import { connect } from 'react-redux';
@@ -68,22 +68,31 @@ const PostAdDiv = styled.div`
   }
 `;
 
-export function HomePage({ username, onSubmitForm }) {
+export function HomePage(props, { username, onSubmitForm }) {
+  // eslint-disable-next-line react/prop-types
   const mapRef = useRef(true);
   const [isHome, setIsHome] = useContext(MenuContext);
-  console.log(setIsHome);
+  const [mapHeight, setMapHeight] = useState(450);
+
   useInjectReducer({ key, reducer });
   useInjectSaga({ key, saga });
   useEffect(() => {
+    const header = document.getElementById('header');
+    if (header && mapRef.current) {
+      const mHeight = screenHeight - header.clientHeight;
+      mapRef.current.style.height = `${mHeight}px`;
+      console.log(mHeight);
+      setMapHeight(mHeight);
+    }
+  });
+
+  useEffect(() => {
     setIsHome(true);
   }, [setIsHome]);
+
   useEffect(() => {
     if (username && username.trim().length > 0) {
       onSubmitForm();
-    }
-    if (mapRef.current) {
-      const { offsetTop } = mapRef.current;
-      mapRef.current.style.height = `${screenHeight - offsetTop}px`;
     }
   });
 
@@ -93,7 +102,7 @@ export function HomePage({ username, onSubmitForm }) {
         <title>Home Page</title>
         <meta name="description" content="Map Page" />
       </Helmet>
-      <MapArea ref={mapRef}>
+      <MapArea id="map-area" ref={mapRef}>
         <GoogleMap />
         <PostAdDiv>
           <Link to={PAGE_URL.ADD_ADDRESS}>POST YOUR AD</Link>
